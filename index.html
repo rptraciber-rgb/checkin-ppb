@@ -4,10 +4,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pemindai Check-in PPB</title>
+  <title>Login Petugas Check-in PPB</title>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f5f9;
+      margin: 0;
+      padding: 24px;
+      color: #202124;
+    }
+
+    main {
+      max-width: 440px;
+      margin: 40px auto;
+      padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #00000012;
+      text-align: center;
+    }
+
+    h1 { font-size: 24px; }
+    #status {
+      margin-top: 20px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+  </style>
 </head>
 <body>
-  <h1>Check-in Peserta PPB</h1>
-  <p>Halaman pemindai barcode sedang disiapkan.</p>
+  <main>
+    <h1>Check-in Peserta PPB</h1>
+    <p>Silakan login menggunakan akun Google petugas.</p>
+
+    <div id="g_id_onload"
+         data-client_id="1032807748344-5hftjvdpps70hqe8plkkca4mf57ha9s0.apps.googleusercontent.com"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="signin_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+
+    <p id="status" role="status">
+      Menunggu login Google. Fungsi check-in belum diaktifkan.
+    </p>
+  </main>
+
+  <script>
+    function handleGoogleLogin(response) {
+      if (!response || !response.credential) {
+        document.getElementById("status").textContent =
+          "Login belum berhasil. Silakan coba lagi.";
+        return;
+      }
+
+      // Token belum dianggap sebagai bukti otorisasi sampai
+      // diverifikasi oleh server. Jangan aktifkan check-in di sini.
+      document.getElementById("status").textContent =
+        "Token login diterima. Validasi keamanan server belum dipasang. " +
+        "Check-in masih dinonaktifkan.";
+    }
+  </script>
 </body>
 </html>
