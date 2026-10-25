@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tes Kamera PPB</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 16px;
+      background: #f2f5f9;
+    }
+    main {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    video {
+      width: 100%;
+      background: #222;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+    button {
+      padding: 12px 18px;
+      margin: 6px 4px 6px 0;
+      cursor: pointer;
+    }
+    #status { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Tes Kamera Check-in PPB</h2>
+    <p>Halaman ini hanya untuk menguji akses kamera, bukan untuk check-in peserta.</p>
+
+    <button id="start">Mulai Tes Kamera</button>
+    <button id="stop" disabled>Matikan Kamera</button>
+
+    <video id="video" autoplay playsinline muted></video>
+    <p id="status">Kamera belum diuji.</p>
+  </main>
+
+  <script>
+    let stream = null;
+
+    document.getElementById("start").addEventListener("click", async () => {
+      const status = document.getElementById("status");
+
+      try {
+        if (!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia) {
+          throw new Error("Browser tidak menyediakan akses kamera.");
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false
+        });
+
+        document.getElementById("video").srcObject = stream;
+        document.getElementById("stop").disabled = false;
+        status.textContent = "BERHASIL: kamera dapat dibuka di GitHub Pages.";
+      } catch (err) {
+        status.textContent = "GAGAL: " + err.name + " — " + err.message;
+      }
+    });
+
+    document.getElementById("stop").addEventListener("click", () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      document.getElementById("video").srcObject = null;
+      document.getElementById("stop").disabled = true;
+      document.getElementById("status").textContent =
+        "Kamera sudah dimatikan.";
+    });
+  </script>
+</body>
+</html>
